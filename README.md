@@ -1,3 +1,2 @@
-# [sathnaga86.com](https://sathnaga86.com)
-Blog that would concentrate on software testing
-techniques and tools for linux, KVM areas and DevOps.
+# [Balamuruhan S](https://balamuruhans.github.io/about/)
+Technical Blogs on testing, automation, exploration work in Linux.

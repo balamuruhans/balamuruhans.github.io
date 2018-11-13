@@ -17,7 +17,7 @@ off hosts which are not used.
 
 * _Maintenance_ – If host have to be shut-off for maintenance or to upgrade etc.,
 
-* Migration can categorized as live, online and offline based on the state in which guest remains in source and destination host during migration.
+Migration can categorized as live, online and offline based on the state in which guest remains in source and destination host during migration.
 
 * _Live migration_ – guest remains to in running state in source, guest is booted and remains to be in paused state in destination host while migration is in progress. Once the migration is completed guest starts its execution from destination host without downtime.
 
@@ -43,10 +43,10 @@ In Postcopy migration, minimum states and resources required for the guest to
 start is copied to destination host and started in destination. so that the pages that gets dirtied will be on destination and other memory pages are copied in background on demand.
 
 
-> Stop the vm in the source and copy non memory vm states to destination
+_ Stop the vm in the source and copy non memory vm states to destination
 to resume in destination
 
-> Copy memory pages on demand/in background using Asynchrounous Page
+_ Copy memory pages on demand/in background using Asynchrounous Page
 faults
 
 _Asynchronous Page Fault:_
