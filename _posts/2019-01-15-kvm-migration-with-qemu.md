@@ -88,8 +88,7 @@ __Qemu live patching:__
   ```
 
 Local host migration from Libvirt is not supported which is explained in
-libvirt mailing list discussion series,
-`https://www.redhat.com/archives/libvir-list/2017-September/msg00441.html`
+libvirt mailing list discussion in this series [https://www.redhat.com/archives/libvir-list/2017-September/msg00441.html](https://www.redhat.com/archives/libvir-list/2017-September/msg00441.html)
 so suggested way to perform Qemu upgrade in production environment using Libvirt
 is,
   1. live migrate the VMs to different host (Postcopy is always the better option)
