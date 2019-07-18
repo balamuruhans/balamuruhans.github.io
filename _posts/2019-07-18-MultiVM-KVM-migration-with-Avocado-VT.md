@@ -82,8 +82,9 @@ according to the OS distributions.
   master_image_name_vms9 = "images/rhel76-ppc64le"
   master_image_name_vms10 = "images/rhel76-ppc64le"
   ```
+
 2. Bring up 10 VMs by importing using virt-install commandline after creating
-NFS setups and copying all the guest images to NFS location [b]
+  NFS setups and copying all the guest images to NFS location [b]
   ```
   # import VMs using virt-install
   create_vm_libvirt = "yes"
@@ -101,8 +102,9 @@ NFS setups and copying all the guest images to NFS location [b]
   nfs_mount_src=/home/bala/NFS
   export_dir=/home/bala/NFS  
   ```
+
 3. Create passwordless ssh with local host and remote host to mount NFS shared
-path in target host and to migrate seamlessly without password prompt
+  path in target host and to migrate seamlessly without password prompt
   ```
   # params to set local and remote server credentials
   local_ip = "192.168.5.3"
@@ -113,10 +115,10 @@ path in target host and to migrate seamlessly without password prompt
   ```
 
 4. Allow selinux to permit libvirt to use NFS shared location in source and
-target host.
+  target host.
 
 5. Open ports 49152~49216 using firewall-cmd in target host while migrating
-from source to target and in source host while migrating back to source.
+  from source to target and in source host while migrating back to source.
 
 6. Configure, install and run stress inside all the VMs,
   ```
@@ -124,10 +126,10 @@ from source to target and in source host while migrating back to source.
   ```
 
 7. As pre-migration check, VM network connection with pings and records
-uptime of each VM before migration.
+  uptime of each VM before migration.
 
 8. Performs 5 times to and fro Postcopy migration one by one from source to target and
-from target to source.
+  from target to source.
 
   Source -> Target:
   ```
@@ -169,7 +171,7 @@ from target to source.
   - check dmesg of every VM for any call trace, oops, warnings
 
 10. Finally it performs all the cleanup of configuration setting, VMs in Source
-and target host.
+  and target host.
 
 11. Same repeats in to and fro migration for 5 times (configurable to any no of
   times) and in this particular test we perform one by one VMs are migrated but
