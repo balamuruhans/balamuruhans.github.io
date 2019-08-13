@@ -1,24 +1,17 @@
-# Converge migration for Hugepage backed VM:
-
-Precopy migration for a 16M hugepage backed would continue infinitely even for
-idle guest because for migration qemu uses 4K pagesize and if any page dirtied
-by guest results in 4096 pages to be retransmitted again.
+# Precise expected downtime calculation fix for migration:
 
 Expected downtime field means how much time the system needs to send
 everything that is pending to finish migration, if this expected downtime
-reaches <= downtime-limit qemu completes the migration. By default, qemu uses
-downtime-limit as 300 millisecond. With 16M hugepage backed POWER8 guest to
-migrate the expected downtime would be more than 3400 millisecond due to this
-qemu doesn't converge for handing over the VM to destination cause it to
-migrate infinitely.
+reaches <= downtime-limit Qemu completes the migration. By default,
+Qemu uses downtime-limit as 300 millisecond.
 
-However user can configure the downtime-limit (ie to 3400ms) by overriding
-default(300ms) value in order to migrate successfully using precopy.
-But it was observed that qemu calculation for expected downtime is not accurate
-which would mislead user to set downtime-limit wrong that will not allow the
-migration to complete.
+However user can configure the downtime-limit by overriding default(300ms)
+value in order to complete migration based on rate of page dirtying and rate
+at which page transferred during pre-copy. But it was observed that Qemu
+calculation for expected downtime is not accurate which would mislead user to
+set downtime-limit wrong and will not allow the migration to complete.
 
-Qemu Monitor:
+__Qemu Monitor:__
 ```
 info migrate_parameters
 compress-level: 1
@@ -62,13 +55,11 @@ Actual calculation:
 expected_downtime = remaining ram / throughput
 expected_downtime = 376892 bytes / 866.83 mbps => 3478.34 (actual value)
 ```
-It was fixed by my [expected downtime calculation fix patch](https://lists.gnu.org/archive/html/qemu-devel/2018-04/msg02417.html) that helps user to migrate by configuring
-accurate downtime-limit for 16M Hugepage backed POWER8 guest from POWER8 Host
-to POWER9 Host,
+It was fixed by my [expected downtime calculation fix patch](https://lists.gnu.org/archive/html/qemu-devel/2018-04/msg02417.html) that helps user to migrate by configuring accurate downtime-limit. But got suggestions from community that the calculation is of not accurate and
+we need to consider the ram that gets re-dirtied during the time when we would
+have actually transferred ram in the current iteration.
 
-But got suggestions from community that the calculation is of not accurate and
-we need to consider the ram that gets redirtied during the time when we would
-have actually transferred ram in the current iteration. Then I did work on [expected
+Then I did work on [expected
 downtime calculation precision patch](https://lists.gnu.org/archive/html/qemu-devel/2019-01/msg05421.html), where I have came up with a calculation by considering the ram that could
 get redirtied during the current iteration at the time we would have
 transferred the remaining ram in current iteration. By this way,
@@ -79,3 +70,9 @@ value.
 Later community accepted the existing calculation which I had fixed in previous patch is accurate as, expected downtime is considered as how long time the guest will be down if we stop the VM right now and migrate.
 And if we stop the VM then there wont be any re dirtying of pages in
 [review comment](https://lists.gnu.org/archive/html/qemu-devel/2019-01/msg06100.html).
+
+This calculation precision was felt practical in a bug where precopy migration for a hugepage backed VM that would continue infinitely even for
+idle guest because for migration qemu uses 4K pagesize and if any single page dirtied by guest resulted in (Hugepage size / 4K) pages to be re-transmitted again.
+
+In Power, with 16M hugepage backed POWER8 guest failed to successfully migrate as actual expected downtime was greater than 300 millisecond and
+downtime-limit set by user based on expected downtime wrongly calculated was inaccurate and qemu doesn't converge for handing over the VM to destination cause it to migrate infinitely.
