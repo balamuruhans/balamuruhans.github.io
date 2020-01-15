@@ -4,8 +4,8 @@ title: Balamuruhan S
 permalink: /about/
 ---
 
-Linux on Power - KVM FVT Engineer,
+Software Engineer,
 Linux Technology Centre,
-IBM India Pvt Ltd
+IBM India Systems Development Lab
 
-open source contributor, maintainer for Avocado and Autotest Frameworks
+Open source contributor -- Maintainer for Avocado and Autotest Frameworks
